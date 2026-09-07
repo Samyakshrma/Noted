@@ -1,0 +1,207 @@
+{
+  "main": {
+    "id": "cc2eb319de6ab8c4",
+    "type": "split",
+    "children": [
+      {
+        "id": "5b38373430b08240",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "58b4dbab606c82dc",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Virtualization, Containers & Kubernetes — Complete Study Guide.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Virtualization, Containers & Kubernetes — Complete Study Guide"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "02fe17efd687ff8e",
+    "type": "split",
+    "children": [
+      {
+        "id": "dcb523a2b9acfc97",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "205f595bcba4fe77",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "byCreatedTimeReverse",
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "a18028caa52c82e1",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "478d2d1f57596be3",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 318.171875
+  },
+  "right": {
+    "id": "a9c9c9ca7d7c6754",
+    "type": "split",
+    "children": [
+      {
+        "id": "0137f244869d8346",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "46911470d96d48c9",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "🖥️ Virtualization, Containers & Kubernetes — Complete Study Guide.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "3550f561f9a6e7e3",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "🖥️ Virtualization, Containers & Kubernetes — Complete Study Guide.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links"
+            }
+          },
+          {
+            "id": "c0885a27d263b831",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "8a85f6ade1beaaa7",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "dced3036db411311",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "🖥️ Virtualization, Containers & Kubernetes — Complete Study Guide.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "58b4dbab606c82dc",
+  "lastOpenFiles": [
+    "Azure Global Infrastructure, Resource Hierarchy & ARM — Complete Study Guide.md",
+    "Virtualization, Containers & Kubernetes — Complete Study Guide.md",
+    "Cloud Concepts — Complete Study Guide.md",
+    "Azure Compute — Deep Dive Reference Guide.md",
+    "Identity & Access Management — Complete Study Guide.md",
+    "Azure Networking — Complete Study Guide (Extremely Detailed).md",
+    "Azure Observability — Deep Dive Reference Guide.md",
+    "Azure Governance — Deep Dive Reference Guide.md",
+    "Azure Security — Deep Dive Reference Guide.md",
+    "Azure Storage — Deep Dive Reference Guide.md",
+    "Untitled 1.md",
+    "Untitled",
+    "Business"
+  ]
+}

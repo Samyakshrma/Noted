@@ -1,0 +1,288 @@
+
+---
+
+## PART 1: Azure Global Infrastructure
+
+### 🔹 Regions
+
+🔑 **Keyword:** _"A geographic area with its own set of datacenters"_
+
+- **Definition:** A set of datacenters deployed within a geographic area, connected via a low-latency network.
+- **Key fact:** Not every Azure service is available in every region — check availability before designing
+- **Examples:** East US, West Europe, Southeast Asia, Central India
+
+---
+
+### 🔹 Region Pairs
+
+🔑 **Keyword:** _"Two regions, 300+ miles apart, backup buddies"_
+
+- **Definition:** Each Azure region is paired with another region **within the same geography** (usually same country/nearby) for disaster recovery.
+- **Benefits:**
+    - Platform updates are rolled out to only **one paired region at a time** (never both together)
+    - If a region-wide outage happens, the paired region is **prioritized for recovery**
+    - Data stays within the same legal/data-residency boundary
+- **Example:** East US ↔ West US, North Europe ↔ West Europe
+
+---
+
+### 🔹 Availability Zones
+
+🔑 **Keyword:** _"Physically separate datacenters within one region"_
+
+- **Definition:** Unique physical locations **inside a region**, each with its own independent power, cooling, and networking.
+- **Minimum:** Regions that support zones have **at least 3** Availability Zones
+- **Protects against:** Datacenter-level failure (fire, power loss, cooling failure) — NOT a full region disaster (use region pairs for that)
+
+**Zone architecture**
+
+- Each zone = one or more datacenters with fully independent infrastructure
+- Zones within a region are connected by high-speed, low-latency private links
+
+**Zone redundancy** 🔑 _"Spread it across zones so one failure doesn't take you down"_
+
+- **Zone-redundant** services automatically replicate/distribute data or instances across multiple zones (e.g., Zone-Redundant Storage — ZRS)
+- **Zonal** services let you _pin_ a resource to one specific zone (e.g., "put this VM in Zone 1") — you control placement, you handle the redundancy
+
+---
+
+### 🔹 Datacenters
+
+🔑 **Keyword:** _"The actual physical buildings"_
+
+**Physical infrastructure**
+
+- Real buildings containing servers, storage, networking gear, cooling systems, backup power, physical security (badges, cameras, guards)
+
+**Fault Domains** 🔑 _"A group of hardware that shares one point of failure"_
+
+- **Definition:** A logical grouping of hardware (rack, power source, network switch) inside a datacenter. If a fault domain fails, only hardware in _that_ domain is affected.
+- **Azure behavior:** When you use an **Availability Set**, Azure automatically spreads your VMs across multiple fault domains (typically 2–3) so a single rack/power failure doesn't kill all your VMs at once.
+- **Bonus — Update Domains:** Usually taught alongside fault domains — groups of VMs that get rebooted together during planned maintenance, so not all your VMs restart simultaneously.
+
+---
+
+### 📊 Infrastructure Hierarchy at a Glance
+
+```
+Geography (e.g., "United States")
+   └── Region (e.g., "East US")
+         └── Availability Zone (e.g., Zone 1, 2, 3)
+               └── Datacenter(s)
+                     └── Fault Domains / Update Domains
+```
+
+|Concept|Protects Against|Scope|
+|---|---|---|
+|Region Pair|Full region disaster|Two regions, same geography|
+|Availability Zone|Datacenter-level failure|Within one region|
+|Fault Domain|Rack/power/network failure|Within one datacenter|
+
+---
+
+---
+
+## PART 2: Azure Resource Hierarchy ⭐ (Very Important)
+
+🔑 **Core structure — memorize this order:**
+
+```
+Management Groups
+   └── Subscriptions
+         └── Resource Groups
+               └── Resources
+```
+
+---
+
+### 🔹 Management Groups
+
+🔑 **Keyword:** _"Container for organizing multiple subscriptions"_
+
+- **Definition:** Top-level container used to manage access, policy, and compliance across **multiple subscriptions** at once.
+- **Nesting:** Can be nested up to **6 levels deep** (not counting the root)
+- **Example:** Group subscriptions by department ("IT", "Finance") or environment ("Prod", "Dev")
+- There's always one implicit **Root Management Group** at the very top
+
+---
+
+### 🔹 Subscriptions
+
+🔑 **Keyword:** _"The billing + access boundary"_
+
+- **Definition:** A logical container that ties Azure resource usage to **billing**, and acts as a boundary for **access control (RBAC)** and **service quotas/limits**.
+- **Identity link:** Each subscription trusts exactly one Microsoft Entra ID (Azure AD) tenant for identity
+- **Example:** One subscription per project, department, or environment (Dev / Prod)
+
+---
+
+### 🔹 Resource Groups
+
+🔑 **Keyword:** _"Logical container for resources that share a lifecycle"_
+
+- **Definition:** Groups related resources together for a solution — resources in the same group are typically deployed, updated, and deleted **together**.
+- **Rule:** A resource can belong to **only ONE** resource group at a time
+- **Note:** A resource group has its own "region" (for storing its metadata), but the resources inside it can each live in **different regions**
+
+---
+
+### 🔹 Resources
+
+🔑 **Keyword:** _"The actual thing you create"_
+
+- **Definition:** An individual manageable item in Azure — a VM, a storage account, a database, a virtual network. This is the **lowest level** of the hierarchy.
+
+---
+
+### 🧬 Inheritance
+
+🔑 **Keyword:** _"Settings flow downward automatically"_
+
+- Policies and role assignments set at a **higher level** automatically apply to **everything beneath it**, unless explicitly overridden.
+- **Example:** Assign the "Reader" role at the Management Group level → it automatically applies to every Subscription, Resource Group, and Resource underneath it.
+
+---
+
+### 🛡️ Governance
+
+🔑 **Keyword:** _"Rules and guardrails applied across the hierarchy"_
+
+- **Azure Policy:** Enforces rules (e.g., "only allow VMs in East US"). Can be applied at any level and is inherited downward.
+- **Azure Blueprints/Initiatives:** Bundle policies + role assignments + templates together for consistent environment setup at scale.
+- Applied **top-down** so an entire organization stays compliant without manual repetition.
+
+---
+
+### 🔑 Permissions Flow (RBAC)
+
+🔑 **Keyword:** _"Access flows down, never up"_
+
+- **Role-Based Access Control (RBAC)** roles assigned at any level are **inherited by everything below**.
+- Higher-level assignment = broader scope (a role at Management Group level touches many subscriptions at once).
+- RBAC is **additive** — assigning more roles at a lower level _adds_ permissions, it doesn't take them away (unless you use an explicit **Deny assignment**).
+- **Example:** "Owner" role assigned at the Subscription level → automatically becomes Owner on every Resource Group and Resource inside that subscription.
+
+---
+
+---
+
+## PART 3: Azure Resource Manager (ARM)
+
+### 🔹 ARM Architecture
+
+🔑 **Keyword:** _"The front door for every Azure request"_
+
+- **Definition:** ARM is Azure's deployment & management layer. **Every** request — from Portal, CLI, PowerShell, REST API, or SDK — goes through ARM.
+- **Flow:**
+
+```
+Your Tool (Portal / CLI / PowerShell / SDK / REST)
+        ↓
+Azure Resource Manager (ARM)
+        ↓
+Resource Provider (handles the specific type of resource)
+        ↓
+Actual Azure Resource created/managed
+```
+
+- **Why it matters:** ARM is where RBAC + Azure Policy get **enforced**, and it gives you consistent tagging, tracking, and idempotent deployments no matter which tool you used
+
+---
+
+### 🔹 Resource Providers
+
+🔑 **Keyword:** _"Services that know how to create a specific resource type"_
+
+- **Definition:** A resource provider supplies the resource types available in a subscription. It must be **registered** on your subscription before you can create that type of resource.
+- **Naming format:** `Microsoft.<ProviderName>`
+
+**Examples:**
+
+|Resource Provider|Handles|
+|---|---|
+|`Microsoft.Compute`|Virtual Machines, VM Scale Sets, Disks|
+|`Microsoft.Storage`|Storage Accounts|
+|`Microsoft.Network`|VNets, NSGs, Load Balancers, Public IPs|
+|`Microsoft.Sql`|Azure SQL Database|
+|`Microsoft.Web`|App Service, Function Apps|
+
+---
+
+### 🔹 ARM Templates
+
+🔑 **Keyword:** _"Infrastructure as Code (IaC) blueprint"_
+
+- **Definition:** A **declarative** file describing _what_ you want deployed — you describe the end state, ARM figures out _how_ to get there.
+- **Idempotent:** Deploying the same template twice gives the same result — it won't create duplicates.
+- **Format:** JSON (or **Bicep**, a newer, cleaner language that compiles down to ARM JSON)
+- **Benefits:** Repeatable, version-controllable (Git), consistent across environments
+
+**Template building blocks:**
+
+#### Parameters
+
+🔑 _"Inputs you provide at deployment time"_
+
+- Values passed in when you run the deployment — lets the **same template** be reused for Dev, Test, and Prod
+- **Example:** VM size, admin username, environment name
+
+#### Variables
+
+🔑 _"Reusable values defined inside the template"_
+
+- Values computed or defined once and reused throughout the template — reduces repetition and typos
+- **Example:** Building a resource name by combining a prefix + environment string
+
+#### Outputs
+
+🔑 _"Values returned after deployment finishes"_
+
+- Information about the deployed resources returned back to you or to another script/template
+- **Example:** A generated connection string, a public IP address, a resource ID
+
+#### Conditions
+
+🔑 _"Deploy a resource only if a condition is true"_
+
+- Lets a resource be deployed **conditionally**, based on a parameter value
+- **Example:** Only create a Public IP resource if `environment == "production"`
+
+---
+
+### 📊 ARM Template Structure at a Glance
+
+```json
+{
+  "parameters":  { ... },   // inputs from the user
+  "variables":   { ... },   // reusable internal values
+  "resources":   [ ... ],   // what to deploy (conditions live here)
+  "outputs":     { ... }    // values returned after deployment
+}
+```
+
+---
+
+---
+
+## 🧠 Quick Recall Cheat Sheet
+
+|Term|One-Line Keyword|
+|---|---|
+|Region|Geographic area with its own datacenters|
+|Region Pair|Two regions, 300+ miles apart, backup buddies|
+|Availability Zone|Physically separate datacenters in one region|
+|Zone Redundancy|Auto-spread across zones for resilience|
+|Fault Domain|Group of hardware sharing one failure point|
+|Management Group|Container for organizing subscriptions|
+|Subscription|Billing + access boundary|
+|Resource Group|Container for resources sharing a lifecycle|
+|Resource|The actual thing you create|
+|Inheritance|Settings flow downward automatically|
+|RBAC Permissions Flow|Access flows down, never up|
+|ARM|Front door/API layer for all Azure requests|
+|Resource Provider|Service that knows how to create a resource type|
+|ARM Template|Infrastructure as Code blueprint (JSON/Bicep)|
+|Parameters|Inputs at deployment time|
+|Variables|Reusable values inside the template|
+|Outputs|Values returned after deployment|
+|Conditions|Deploy a resource only if true|
